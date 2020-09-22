@@ -14,7 +14,7 @@ class StringChallenge(ConanFile):
         self.copy("*.dylib", "bin", "lib")
 
     def build(self):
-        cmake = CMake(self, generator='Ninja')
+        cmake = CMake(self)
         cmake.configure()
         cmake.build()
         cmake.test() # If you dont have any tests this will fail!
