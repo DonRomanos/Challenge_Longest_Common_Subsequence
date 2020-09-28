@@ -1,25 +1,27 @@
-#include "challenge.hpp"
-#include "reference.hpp"
+#include "src/implementation.hpp"
+#include "src/reference/implementation.hpp"
 
 #include "benchmark/benchmark.h"
 
 /***************************************************************/
 // Templated Benchmark to compare both challenge and reference
-template <class T> void BM_SomeFunc(benchmark::State& state)
+template <int (*T)(std::string_view, std::string_view)>
+void BM_LongestCommonSequence(benchmark::State &state)
 {
-    T toBeBenchmarked;
+    std::string input(state.range(0), 'A');
     for (auto _ : state)
     {
-        toBeBenchmarked.doingSomething();
+        benchmark::DoNotOptimize(T(input, input));
     }
-    state.SetComplexityN(state.range(0)); // How many times we ran through the values
+    state.SetComplexityN(state.range(0));
 }
 
 /***************************************************************/
-#ifdef BUILD_REFERENCE
-BENCHMARK_TEMPLATE(BM_SomeFunc, reference::SomeClass)->Range(1 << 0, 1 << 10)->Complexity();
-#endif
-BENCHMARK_TEMPLATE(BM_SomeFunc, challenge::SomeClass)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
+// Could not get both to run because of a compiler error mazbe somebody knows how to fix this?
+// BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &challenge::get_length_of_longest_common_sequence, &reference::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
+
+BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &challenge::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
+BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &reference::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
 
 // Run the benchmark
 BENCHMARK_MAIN();

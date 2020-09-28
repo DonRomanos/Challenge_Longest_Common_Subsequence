@@ -4,7 +4,7 @@
 
 This is a well known Problem from Dynamic Programming.
 
-Given two strings, for example "AXYUIZ" and "CXYZAE" find the length of the largest common subsequence of both strings, e.g. in the example it is "XY" with a length of 2.
+Given two strings, for example "AXYUIZ" and "CXYO" find the length of the largest common subsequence of both strings, e.g. in the example it is "XY" with a length of 2.
 
 In order to practice this I recommend you to use a Test-Driven-Developement Approach, therefore no Tests are provided by default.
 

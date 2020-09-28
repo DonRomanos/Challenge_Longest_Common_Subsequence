@@ -9,7 +9,7 @@ option(BUILD_BENCHMARK "This will enable the performance tests using google benc
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(Challenge::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME} INTERFACE src/)
+target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(${PROJECT_NAME} INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/implementation.hpp
@@ -25,6 +25,8 @@ target_compile_options(${PROJECT_NAME} INTERFACE
 )
 
 ######################################################################
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
+
 find_package(gtest REQUIRED)
 
 add_executable(${PROJECT_NAME}_Tests)
@@ -32,9 +34,6 @@ add_executable(${PROJECT_NAME}_Tests)
 target_sources(${PROJECT_NAME}_Tests PRIVATE 
     src/implementation_tests.cpp
 )
-
-target_include_directories(${PROJECT_NAME}_Tests PRIVATE
-    src/)
 
 target_link_libraries(${PROJECT_NAME}_Tests PRIVATE
     Challenge::${PROJECT_NAME}
@@ -68,9 +67,6 @@ if( BUILD_BENCHMARK AND BUILD_REFERENCE)
 
     target_sources(${PROJECT_NAME}_Benchmark PRIVATE 
         src/reference/benchmark.cpp)
-
-    target_include_directories(${PROJECT_NAME}_Benchmark PRIVATE
-        src)
 
     target_link_libraries(${PROJECT_NAME}_Benchmark PRIVATE
         Challenge::${PROJECT_NAME}

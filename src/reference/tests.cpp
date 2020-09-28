@@ -1,31 +1,42 @@
 #include "gtest/gtest.h"
 
-template <typename T>
-class Some_typed_Test : public ::testing::Test
+#include "src/reference/implementation.hpp"
+#include "src/implementation.hpp"
+
+class LongestCommonSequenceTestHelper : public ::testing::TestWithParam<int (*)(std::string_view, std::string_view)>
 {
-
 };
-TYPED_TEST_CASE_P(Some_typed_Test);
 
-/***************************************************************/
-TYPED_TEST_P(Some_typed_Test, Should_Succeed) {
-  // Inside a test, refer to TypeParam to get the type parameter.
-  // TypeParam n = 0;
-  SUCCEED();
+TEST_P(LongestCommonSequenceTestHelper, Should_return_0_for_empty_strings)
+{
+    auto to_test = GetParam();
+    EXPECT_EQ(to_test("", ""), 0);
 }
 
-// Register all test names, e.g. Should_Succeed
-REGISTER_TYPED_TEST_CASE_P(Some_typed_Test,
-                            Should_Succeed);
+TEST_P(LongestCommonSequenceTestHelper, Should_return_correct_result_for_simple_case)
+{
+    auto to_test = GetParam();
+    EXPECT_EQ(to_test("AXYUIZ", "CXYO"), 2);
+}
 
-// Now we can instantiate it with our types.
-#ifdef BUILD_REFERENCE
-    using TypesToTest = ::testing::Types<challenge::SomeClass, reference::SomeClass>;
-#else
-    using TypesToTest = ::testing::Types<reference::SomeClass>;
-#endif
+TEST_P(LongestCommonSequenceTestHelper, Should_return_length_of_strings_for_equal_strings)
+{
+    auto to_test = GetParam();
+    auto expected = std::string(80, 'A');
+    EXPECT_EQ(to_test(expected, expected), expected.size());
+}
 
-INSTANTIATE_TYPED_TEST_CASE_P(WhateverNameYouWant, Some_typed_Test, TypesToTest);
+TEST_P(LongestCommonSequenceTestHelper, Should_be_case_sensitive)
+{
+    auto to_test = GetParam();
+    EXPECT_EQ(to_test("AxyUIZ", "CXYO"), 0);
+}
+
+INSTANTIATE_TEST_CASE_P(
+    LongestCommonSequenceTests,
+    LongestCommonSequenceTestHelper,
+    ::testing::Values(
+        reference::get_length_of_longest_common_sequence, challenge::get_length_of_longest_common_sequence));
 
 TEST(GtestDependency, Should_Compile_if_gtest_was_found)
 {
