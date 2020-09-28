@@ -17,9 +17,6 @@ void BM_LongestCommonSequence(benchmark::State &state)
 }
 
 /***************************************************************/
-// Could not get both to run because of a compiler error mazbe somebody knows how to fix this?
-// BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &challenge::get_length_of_longest_common_sequence, &reference::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
-
 BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &challenge::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
 BENCHMARK_TEMPLATE(BM_LongestCommonSequence, &reference::get_length_of_longest_common_sequence)->RangeMultiplier(2)->Range(1 << 0, 1 << 12)->Complexity();
 
